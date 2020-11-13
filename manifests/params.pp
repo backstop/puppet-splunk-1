@@ -145,10 +145,19 @@ class splunk::params (
       $enterprise_confdir              = "${enterprise_homedir}/etc"
       $forwarder_install_options       = []
       $enterprise_install_options      = []
-      $enterprise_service      = 'Splunkd'
-      $forwarder_service       = 'SplunkForwarder'
-      $enterprise_service_file = '/etc/systemd/system/multi-user.target.wants/Splunkd.service'
-      $forwarder_service_file  = '/etc/systemd/system/multi-user.target.wants/SplunkForwarder.service'
+      # Systemd not supported until Splunk 7.2.2
+      if $facts['service_provider'] == 'systemd' and versioncmp($version, '7.2.2') >= 0 {
+        $enterprise_service      = 'Splunkd'
+        $forwarder_service       = 'SplunkForwarder'
+        $enterprise_service_file = '/etc/systemd/system/multi-user.target.wants/Splunkd.service'
+        $forwarder_service_file  = '/etc/systemd/system/multi-user.target.wants/SplunkForwarder.service'
+      }
+      else {
+        $enterprise_service      = 'splunk'
+        $forwarder_service       = 'splunk'
+        $enterprise_service_file = '/etc/init.d/splunk'
+        $forwarder_service_file  = '/etc/init.d/splunk'
+      }
     }
     'SunOS': {
       $path_delimiter                  = '/'

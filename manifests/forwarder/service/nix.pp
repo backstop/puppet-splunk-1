@@ -21,7 +21,7 @@ class splunk::forwarder::service::nix inherits splunk::forwarder::service {
     # unit files during uninstallation, so you may be required to manually
     # remove existing unit files before re-installing and enabling boot-start.
     exec { 'enable_splunkforwarder':
-      command     => "${splunk::forwarder::forwarder_homedir}/bin/splunk enable boot-start -user ${splunk::forwarder::splunk_user} --accept-license --answer-yes --no-prompt",
+      command     => "${splunk::forwarder::forwarder_homedir}/bin/splunk enable boot-start -systemd-managed 1 -user ${splunk::forwarder::splunk_user} --accept-license --answer-yes --no-prompt",
       tag         => 'splunk_forwarder',
       refreshonly => true,
       before      => Service[$splunk::forwarder::service_name],
